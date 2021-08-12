@@ -1,13 +1,19 @@
 <div>Name <input type="text" name="attr_character_name" />Race <select name="attr_race">
     <option value="Human">Human</option><option value="Tuner">Tuner</option><option value="Automaton">Automaton</option></select> </div><div>
-Class <select name="attr_class">
+Class
+<fieldset class="repeating_classchoice">
+	<select name="attr_class">
     <option value="Civilian">Civilian</option><option value="Face">Face</option><option value="Grounder">Grounder</option><option value="Gunslinger">Gunslinger</option><option value="Heavy">Heavy</option><option value="Infiltrator">Inflitrator</option><option value="Magus">Magus</option><option value="Marhsal">Marshal</option><option value="Martial_Artist">Martial Artist</option><option value="Medic">Medic</option><option value="Sniper">Sniper</option><option value="Techie">Techie</option>
     </select>
+	<select name="attr_level">
+		<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option>
+	</select>
+</fieldset>
 
 Archetype <select name="attr_archetype">
         <option value="Anti-Hero">Anti-Hero</option><option value="Authority">Authority</option><option value="Banner_Head">Banner Head</option><option value="Brawler">Brawler</option><option value="Brother_in_Blood">Brother in Blood</option><option value="Cleaner">Cleaner</option><option value="Country_Gunman">Country Gunman</option><option value="Darkslinger">Darkslinger</option><option value="Diplomat">Diplomat</option><option value="Driver">Driver</option><option value="Field_Machanist">Field Machanist</option><option value="Field_Medic">Field Medic</option><option value="Grandmaster">Grandmaster</option><option value="Gun_Dancer">Gun Dancer</option><option value="Infantry_Support_Specialist">Infantry Support Specialist</option></option><option value="Machine_of_War">Machine of War</option><option value="Magician">Magician</option><option value="Man-at-Arms">Man-at-Arms</option><option value="Mecha_Pilot">Mecha Pilot</option><option value="Militarist">Militarist</option><option value="Pathfinder">Pathfinder</option><option value="Pistolero">Pistolero</option><option value="Recon_Intelligence">Recon Intelligence</option><option value="Ring_Fighter">Ring_Fighter</option><option value="Sapper">Sapper</option><option value="Selfless_Protector">Selfless Protector</option><option value="Skirmisher">Skirmisher</option><option value="Suave">Suave</option><option value="Technomancer">Technomancer</option>
     </select></div>
-Level <input type="number" name="attr_classlvl" value="attr_classlvl" min=1 max=20>
+Level <input type="number" name="attr_charlvl" value="attr_charlvl" min=1 max=20> Prof Bonus <input type="number" name="attr_profbonus" value="">
 
 
 <div class="rowflex nowrap">
@@ -61,10 +67,9 @@ Level <input type="number" name="attr_classlvl" value="attr_classlvl" min=1 max=
 <input name="attr_vig_mod" type="hidden" value="0">
 <input name="attr_rest" type="hidden" value="0">
 
+
 <script type="text/worker">
-
 const int = score => parseInt(score, 10) || 0;
-
 
 const stats = ["str", "dex", "con", "wis", "int", "cha", "vig"];
 stats.forEach(stat => {
@@ -74,7 +79,7 @@ stats.forEach(stat => {
             //console.log(stat_base);
             let stat_mod = 0;
             if (stat_base >= 20) stat_mod = "+5";
-            else if (state_base >= 18) stat_mod= "+4";
+            else if (stat_base >= 18) stat_mod = "+4";
             else if (stat_base >= 16) stat_mod = "+3";
             else if (stat_base >= 14) stat_mod = "+2";
             else if (stat_base >= 12) stat_mod = "+1";
@@ -89,5 +94,27 @@ stats.forEach(stat => {
         });
     });
 });
+</script>
+<script type="text/worker">
+const repeatingSum = (destinations, section, fields) => {
+    if (!Array.isArray(destinations)) destinations = [destinations.replace(/\s/g, '').split(',')];
+    if (!Array.isArray(fields)) fields = [fields.replace(/\s/g, '').split(',')];
+    getSectionIDs(`repeating_${section}`, idArray => {
+        const attrArray = idArray.reduce((m, id) => [...m, ...(fields.map(field => `repeating_${section}_${id}_${field}`))], []);
+        getAttrs([...attrArray], v => {
+            const getValue = (section, id, field) => v[`repeating_${section}_${id}_${field}`] === 'on' ? 1 : parseFloat(v[`repeating_${section}_${id}_${field}`]) || 0;
+            const commonMultipliers = (fields.length <= destinations.length) ? [] : fields.splice(destinations.length, fields.length - destinations.length);
+            const output = {};
+            destinations.forEach((destination, index) => {
+                output[destination] = idArray.reduce((total, id) => total + getValue(section, id, fields[index]) * commonMultipliers.reduce((subtotal, mult) => subtotal * getValue(section, id, mult), 1), 0);
+            });
+            setAttrs(output);
+        }); 
+    }); 
+};
 
+on('change:repeating_classchoice:level remove:repeating_classchoice', function() {
+	repeatingSum("charlvl", "classchoice","level");
+	});
+	
 </script>
