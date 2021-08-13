@@ -125,10 +125,25 @@ on('change:charlvl', function() {
     let profbonus = 0;
     let updateAttrs = {};
     if (charlvl >= 20) profbonus = "6";
-        else if (charlvl >= 12) profbonus = "5";
-        else if (charlvl >= 10) profbonus = "4";
+        else if (charlvl >= 19) profbonus = "6";
+		else if (charlvl >= 18) profbonus = "6";
+		else if (charlvl >= 17) profbonus = "6";
+		else if (charlvl >= 16) profbonus = "5";
+        else if (charlvl >= 15) profbonus = "5";
+		else if (charlvl >= 14) profbonus = "5";
+		else if (charlvl >= 13) profbonus = "5";
+		else if (charlvl >= 12) profbonus = "4";
+		else if (charlvl >= 11) profbonus = "4";
+		else if (charlvl >= 10) profbonus = "4";
+		else if (charlvl >= 9) profbonus = "4";
         else if (charlvl >= 8) profbonus = "3";
+		else if (charlvl >= 7) profbonus = "3";
+		else if (charlvl >= 6) profbonus = "3";
+		else if (charlvl >= 5) profbonus = "3";
         else if (charlvl >= 4) profbonus = "2";
+        else if (charlvl >= 3) profbonus = "2";
+        else if (charlvl >= 2) profbonus = "2";
+        else if (charlvl >= 1) profbonus = "2";
    updateAttrs['profbonus'] = profbonus;
    console.log({ charlvl: charlvl, 
               profbonus: profbonus,
