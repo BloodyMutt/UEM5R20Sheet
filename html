@@ -124,11 +124,11 @@ on('change:charlvl', function() {
     let charlvl = parseInt(values.charlvl) || 0;
     let profbonus = 0;
     let updateAttrs = {};
-    if (charlvl >= 20) profbonus = "+6";
-        else if (charlvl >= 12) profbonus = "+5";
-        else if (charlvl >= 10) profbonus = "+4";
-        else if (charlvl >= 8) profbonus = "+3";
-        else if (charlvl >= 4) profbonus = "+2";
+    if (charlvl >= 20) profbonus = "6";
+        else if (charlvl >= 12) profbonus = "5";
+        else if (charlvl >= 10) profbonus = "4";
+        else if (charlvl >= 8) profbonus = "3";
+        else if (charlvl >= 4) profbonus = "2";
    updateAttrs['profbonus'] = profbonus;
    console.log({ charlvl: charlvl, 
               profbonus: profbonus,
