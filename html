@@ -13,7 +13,7 @@ Class
 Archetype <select name="attr_archetype">
         <option value="Anti-Hero">Anti-Hero</option><option value="Authority">Authority</option><option value="Banner_Head">Banner Head</option><option value="Brawler">Brawler</option><option value="Brother_in_Blood">Brother in Blood</option><option value="Cleaner">Cleaner</option><option value="Country_Gunman">Country Gunman</option><option value="Darkslinger">Darkslinger</option><option value="Diplomat">Diplomat</option><option value="Driver">Driver</option><option value="Field_Machanist">Field Machanist</option><option value="Field_Medic">Field Medic</option><option value="Grandmaster">Grandmaster</option><option value="Gun_Dancer">Gun Dancer</option><option value="Infantry_Support_Specialist">Infantry Support Specialist</option></option><option value="Machine_of_War">Machine of War</option><option value="Magician">Magician</option><option value="Man-at-Arms">Man-at-Arms</option><option value="Mecha_Pilot">Mecha Pilot</option><option value="Militarist">Militarist</option><option value="Pathfinder">Pathfinder</option><option value="Pistolero">Pistolero</option><option value="Recon_Intelligence">Recon Intelligence</option><option value="Ring_Fighter">Ring_Fighter</option><option value="Sapper">Sapper</option><option value="Selfless_Protector">Selfless Protector</option><option value="Skirmisher">Skirmisher</option><option value="Suave">Suave</option><option value="Technomancer">Technomancer</option>
     </select></div>
-Level <input type="number" name="attr_charlvl" value="attr_charlvl" min=1 max=20> Prof Bonus <input type="number" name="attr_profbonus" value="">
+Level <input type="number" name="attr_charlvl" value="" min="1" max="20"> Prof Bonus <input type="number" name="attr_profbonus" value="">
 
 
 <div class="rowflex nowrap">
@@ -118,3 +118,22 @@ on('change:repeating_classchoice:level remove:repeating_classchoice', function()
 	});
 	
 </script>
+<script type="text/worker">
+on('change:charlvl', function() {
+    getAttrs(['charlvl'], function(values) {
+    let charlvl = parseInt(values.charlvl) || 0;
+    let profbonus = 0;
+    let updateAttrs = {};
+    if (charlvl >= 20) profbonus = "+6";
+        else if (charlvl >= 12) profbonus = "+5";
+        else if (charlvl >= 10) profbonus = "+4";
+        else if (charlvl >= 8) profbonus = "+3";
+        else if (charlvl >= 4) profbonus = "+2";
+   updateAttrs['profbonus'] = profbonus;
+   console.log({ charlvl: charlvl, 
+              profbonus: profbonus,
+              updateAttrs: updateAttrs });
+   setAttrs(updateAttrs);
+    });
+  });
+ </script>
